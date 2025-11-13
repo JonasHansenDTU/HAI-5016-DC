@@ -13,8 +13,27 @@ if not api_key:
 # Pass the API key explicitly to the client
 client = genai.Client(api_key=api_key)
 
-response = client.models.generate_content(
-    model="gemini-2.5-flash",
-    contents="Explain how AI works in a few words"
-)
-print(response.text)
+
+# Loop: read user input, send to model, print reply; type 'exit' to quit.
+try:
+    while True:
+        user_input = input("Ask the model (type 'exit' to quit): ").strip()
+        if not user_input:
+            # skip empty input
+            continue
+        if user_input.lower() == "exit":
+            print("Exiting.")
+            break
+        try:
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=user_input
+            )
+            # Print model's text reply
+            print(response.text)
+        except Exception as e:
+            # Simple error message and continue the loop
+            print(f"Error calling model: {e}")
+except KeyboardInterrupt:
+    print("\nInterrupted by user. Exiting.")
+
