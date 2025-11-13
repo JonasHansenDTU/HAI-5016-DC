@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from datetime import date
 from google import genai
 
 # Load .env from the workspace root (if present)
@@ -27,7 +28,9 @@ def build_prompt(history, latest_user_input):
     This works with a simple `contents` string for the existing client API.
     """
     system = "You are a helpful assistant. Keep answers concise and include relevant context from previous turns when appropriate."
-    parts = ["System: " + system, "\nConversation:\n"]
+    # include today's date so the model can reference the current day
+    today = date.today().isoformat()
+    parts = ["System: " + system, f"Date: {today}", "\nConversation:\n"]
 
     # only keep the last MAX_HISTORY_ITEMS entries
     recent = history[-MAX_HISTORY_ITEMS:]
